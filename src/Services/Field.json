@@ -1,0 +1,16 @@
+{
+  "id": "1",
+  "label": "Sales region",
+  "required": true,
+  "choices": [
+    "Asia",
+    "Australiaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "Western Europe",
+    "North America",
+    "Eastern Europe",
+    "Latin America",
+    "Middle East and Africa"
+  ],
+  "displayAlpha": true,
+  "default": "North America"
+}
