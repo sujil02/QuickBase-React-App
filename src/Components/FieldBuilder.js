@@ -199,7 +199,8 @@ export default class FieldBuilder extends React.Component {
 
                 <div>
                     <button onClick={this.saveChanges.bind(this)}
-                            className="btn float-right btn-success">Save Changes
+                            className="btn float-right submit-button btn-success">
+                        <i className="fa fa-refresh fa-spin"></i> Save Changes
                     </button>
                     <span/>
                     <button onClick={this.reset.bind(this)}

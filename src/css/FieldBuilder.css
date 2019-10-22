@@ -65,3 +65,7 @@ input[type=submit]:hover {
     color: red;
     word-wrap: break-word;
 }
+.submit-button{
+    backdrop-filter: blur(60px);
+
+}
