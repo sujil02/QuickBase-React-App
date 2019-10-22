@@ -40,38 +40,45 @@ export default class FieldBuilder extends React.Component {
             window.alert("Duplicates choices are not allowed.")
         } else {
             let val = mockService.addChoice(this.state.newChoice)
-            this.setState({
-                    field: val,
+            this.setState(prevState => ({
+                field: {
+                    ...prevState.field,
+                    choices: val
                 }
-            )
+            }));
+            document.getElementById("add").value = '';
         }
     }
 
     deleteChoice = (choiceName) => {
         //mockService.deleteChoice(choiceName)
-        this.setState(prevState => ({
-            field: {
-                ...prevState.field,
-                choices: this.state.field.choices.filter(course => course !== choiceName)
-            }
-        }));
+        // this.setState(prevState => ({
+        //     field: {
+        //         ...prevState.field,
+        //         choices: this.state.field.choices.filter(course => course !== choiceName)
+        //     }
+        // }));
+        this.state.field.choices = this.state.field.choices.filter(course => course !== choiceName)
+        mockService.delete(choiceName)
     }
 
     saveChanges = () => {
+        let val
         if (this.state.field.label == "") {
             window.alert("Label field is required")
         } else {
             if (this.state.field.default != "") {
-                let val = mockService.addChoice(this.state.field.default)
-                this.setState({
-                        field: val,
+                val = mockService.addChoice(this.state.field.default)
+                this.setState(prevState => ({
+                    field: {
+                        ...prevState.field,
+                        choices: val
                     }
-                )
+                }));
             }
-            let response = mockService.saveField(this.state.field);
-            console.log(response)
+            mockService.saveField(this.state.field, val).then(response => response.json());
+            //console.log(response)
         }
-        localStorage.setItem("data", JSON.stringify(this.state.field));
     }
 
     choiceWidget(choice) {
@@ -93,6 +100,10 @@ export default class FieldBuilder extends React.Component {
                 choices: []
             }
         }));
+        this.state.field.choices = []
+        localStorage.removeItem("data");
+        mockService.reset(this.state.field)
+
     }
 
     render() {
@@ -158,8 +169,9 @@ export default class FieldBuilder extends React.Component {
                             <ul className="list-group">
                                 <li className="list-group-item">
                                     <input
+                                        id="add"
                                         onChange={this.valueChanged.bind(this)}/>
-                                    <a onClick={this.addChoice.bind(this)} className="btn btn-primary">
+                                    <a onClick={this.addChoice.bind(this)} className="btn btn-primary float-right">
                                         Add Choice
                                     </a>
                                 </li>
@@ -179,7 +191,6 @@ export default class FieldBuilder extends React.Component {
                         <div className="col-10">
                             <select id="order" name="order">
                                 <option value="order-alpha">Display choices in Alphabetical Order</option>
-                                <option value="order-input">Display choices in Input Order</option>
                             </select>
                         </div>
 
@@ -188,11 +199,11 @@ export default class FieldBuilder extends React.Component {
 
                 <div>
                     <button onClick={this.saveChanges.bind(this)}
-                            className="btn  btn-success">Save Changes
+                            className="btn float-right btn-success">Save Changes
                     </button>
                     <span/>
                     <button onClick={this.reset.bind(this)}
-                            className="btn  btn-primary">Reset
+                            className="btn  btn-danger">Reset
                     </button>
                 </div>
             </div>
